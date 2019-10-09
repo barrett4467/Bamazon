@@ -48,6 +48,40 @@ function lowInventory(){
     })
 }
 function addInventory(){
+    inquirer.prompt([
+        {
+            message: "Which id would you like to add to?",
+            name: "item_id"
+        },
+        {
+            message: "How many would you like to add?",
+            name: "stock_quantity"
+        }
+    ]).then(function(answer){
+        var id = parseInt(answer.item_id);
+        var newStock = parseInt(answer.stock_quantity);
+        console.log(id);
+        
+        connection.query(`SELECT * FROM store WHERE item_id = ${id}`, function(err, data){
+            var stock = parseInt(data[0].stock_quantity);
+            var updatedStock = stock + newStock;
+            
+            if (err){
+                throw err;
+            } 
+            
+            connection.query(`UPDATE store SET stock_quantity = ${updatedStock} WHERE item_id = ${id}`, function(err, data){
+                if(err) throw err;
+                
+            })
+            console.log(`${newStock} products have been added to ${data[0].product_name}. There are now a total of ${updatedStock}.`);
+            setTimeout(viewProducts, 3000);
+            setTimeout(runApp, 6000);
+
+
+        });
+        // runApp();
+    })
    
 }
 function addProduct(){
