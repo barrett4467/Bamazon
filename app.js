@@ -13,8 +13,9 @@ function displayAll(){
 
     connection.query("SELECT * FROM store", function(err, data){
         if (err) throw err;
-        
+        console.log("==============================================================================")
         console.table(data);
+        console.log("==============================================================================")
     })
 
 }
@@ -24,9 +25,30 @@ setTimeout(runGame, 2000);
 
 function totalCalc (data, count){
     var total = data[0].price * count;
-    return total
+    return total;
 }
-
+function updateStock(data, count, id){
+    var stock = data[0].stock_quantity - count;
+    connection.query(`UPDATE store SET stock_quantity = ${stock} WHERE item_id = ${id}`);
+    return stock;
+}
+function again(){
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Would you like to purchase anything else?",
+            choices: ["yes", "no"],
+            name: "confirm"
+        }
+    ]).then(function(answer){
+        if (answer.confirm === "yes"){
+            runGame();
+        } else{
+            connection.end();
+            console.log("Thank you!");
+        }
+    })
+}
 function runGame (){
     inquirer.prompt([
         {
@@ -48,15 +70,16 @@ function runGame (){
             if (err) throw err;
             if(count <= data[0].stock_quantity){
                 console.log(`Purchase successful! You've purchased ${count} ${data[0].product_name}.`);
-    
                 console.log(`Your total is $${totalCalc(data, count)}.`);
+                updateStock(data, count, id);
+                setTimeout(displayAll, 4000);
             } else {
                 console.log(`There doesn't appear to be enough inventory of ${data[0].product_name}`);
                 console.log(`Looks like there's only ${data[0].stock_quantity} left`);
             }
 
-            connection.end();
-
+            // connection.end();
+            setTimeout(again, 6000);
         })
     })
 }
