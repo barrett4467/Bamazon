@@ -1,6 +1,6 @@
 var inquirer = require("inquirer");
 var mysql = require("mysql");
-var consoleTable = require ("console.table");
+var conTable = require ("console.table");
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -14,7 +14,7 @@ function displayAll(){
     connection.query("SELECT * FROM store", function(err, data){
         if (err) throw err;
         console.log("==============================================================================")
-        console.table(data);
+        conTable(data);
         console.log("==============================================================================")
     })
 
