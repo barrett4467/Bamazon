@@ -14,7 +14,7 @@ function displayAll(){
     connection.query("SELECT * FROM store", function(err, data){
         if (err) throw err;
         console.log("==============================================================================")
-        conTable(data);
+        console.table(data);
         console.log("==============================================================================")
     })
 
@@ -32,6 +32,10 @@ function updateStock(data, count, id){
     var stock = data[0].stock_quantity - count;
     connection.query(`UPDATE store SET stock_quantity = ${stock} WHERE item_id = ${id}`);
     return stock;
+}
+function updateProductSales(data, count, id){
+    var product_sales = data[0].price * count;
+    connection.query(`UPDATE store SET product_sales = ${product_sales} WHERE item_id = ${id}`);
 }
 function again(){
     inquirer.prompt([
@@ -74,6 +78,7 @@ function runGame (){
                     console.log(`Purchase successful! You've purchased ${count} ${data[0].product_name}.`);
                     console.log(`Your total is $${totalCalc(data, count)}.`);
                     updateStock(data, count, id);
+                    updateProductSales(data, count, id);
                     setTimeout(displayAll, 4000);
                 } else {
                     console.log(`There doesn't appear to be enough inventory of ${data[0].product_name}`);

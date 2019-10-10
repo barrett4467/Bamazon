@@ -25,26 +25,37 @@ function viewProducts(){
         console.table(data);
         console.log("==============================================================================")
     })
-    
 }
 function lowInventory(){
     connection.query("SELECT * FROM store", function(err, data){
         if (err) throw err;
-        for (var i = 0; i < data.length; i++){
-            var item_id = data[i].item_id;
-            var product_name = data[i].product_name;
-            var department_name = data[i].department_name;
-            var price = data[i].price;
-            var stock_quantity = data[i].stock_quantity;
 
-            if (stock_quantity < 5){
-                var itemsArr = [];
-                var item = new Product (item_id, product_name, department_name, price, stock_quantity);
-                itemsArr += item;
-                console.table(item);
-                setTimeout(runApp, 3000);
-            } 
+        function checkInventory(){
+            for (var i = 0; i < data.length; i++){
+                var item_id = data[i].item_id;
+                var product_name = data[i].product_name;
+                var department_name = data[i].department_name;
+                var price = data[i].price;
+                var stock_quantity = data[i].stock_quantity;
+                
+                if (stock_quantity < 5){
+                    var itemsArr = [];
+                    var item = new Product (item_id, product_name, department_name, price, stock_quantity);
+                    itemsArr += item;
+                    console.table(item);
+                    setTimeout(runApp, 3000);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
+        var low = checkInventory();
+
+        if (low === false){
+            console.log("Every product has more than 5 items");
+            setTimeout(runApp, 3000);
+        } 
     })
 }
 function addInventory(){
@@ -61,26 +72,41 @@ function addInventory(){
         var id = parseInt(answer.item_id);
         var newStock = parseInt(answer.stock_quantity);
         console.log(id);
-        
-        connection.query(`SELECT * FROM store WHERE item_id = ${id}`, function(err, data){
-            var stock = parseInt(data[0].stock_quantity);
-            var updatedStock = stock + newStock;
+        function checkId(data){
             
-            if (err){
-                throw err;
-            } 
-            
-            connection.query(`UPDATE store SET stock_quantity = ${updatedStock} WHERE item_id = ${id}`, function(err, data){
-                if(err) throw err;
+            for (var i = 0; i < data.length; i++){
+                if (id != data[i].item_id){
+                    return console.log("That doesn't appear to be a valid id. Please try again.");
+                }
+    
+            }
+        }
+        if (id != NaN){
+            connection.query(`SELECT * FROM store WHERE item_id = ${id}`, function(err, data){
+                var stock = parseInt(data[0].stock_quantity);
+                var updatedStock = stock + newStock;
+                checkId(data);
+    
+                if (err){
+                    throw err;
+                } 
                 
-            })
-            console.log(`${newStock} products have been added to ${data[0].product_name}. There are now a total of ${updatedStock}.`);
-            setTimeout(viewProducts, 3000);
-            setTimeout(runApp, 6000);
+                connection.query(`UPDATE store SET stock_quantity = ${updatedStock} WHERE item_id = ${id}`, function(err, data){
+                    if(err) throw err;
+                    
+                })
+                console.log(`${newStock} products have been added to ${data[0].product_name}. There are now a total of ${updatedStock}.`);
+                setTimeout(viewProducts, 3000);
+                setTimeout(runApp, 6000);
+                
+                
+            });
 
-
-        });
-        // runApp();
+        } else {
+            console.log("That doesn't appear to be valid. Try again.");
+            addInventory();
+        }
+        
     })
    
 }
@@ -114,7 +140,7 @@ function addProduct(){
         // var newProduct = new Product (name, department, price, stock);
         connection.query(`INSERT INTO store (product_name, department_name, price, stock_quantity) VALUES ("${name}", "${department}", ${price}, ${stock})`);
         console.log(`${stock} ${name}s added to the ${department} department at a price of ${price} each`);
-        
+        setTimeout(runApp, 3000);
     })
 }
 
@@ -130,6 +156,7 @@ function runApp(){
         var action = answer.action;
         if (action === "View Products for Sale"){
             viewProducts();
+            setTimeout(runApp, 3000);
         } else if (action === "View Low Inventory"){
             lowInventory();
         } else if (action === "Add to Inventory"){
