@@ -21,7 +21,7 @@ function displayAll(){
 }
 
 displayAll();
-setTimeout(runGame, 2000);
+setTimeout(runGame, 1500);
 
 function totalCalc (data, count){
     var total = data[0].price * count;
@@ -79,14 +79,14 @@ function runGame (){
                     console.log(`Your total is $${totalCalc(data, count)}.`);
                     updateStock(data, count, id);
                     updateProductSales(data, count, id);
-                    setTimeout(displayAll, 4000);
+                    setTimeout(displayAll, 2500);
                 } else {
                     console.log(`There doesn't appear to be enough inventory of ${data[0].product_name}`);
                     console.log(`Looks like there's only ${data[0].stock_quantity} left`);
                 }
             
     
-                setTimeout(again, 6000);
+                setTimeout(again, 5500);
 
         })
 

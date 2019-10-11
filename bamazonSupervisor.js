@@ -28,8 +28,29 @@ function again(){
 }
 function viewProductSales(){
     console.log("Salesssss");
-    connection.query(`SELECT department_name FROM store INNER JOIN departments ON store.department_name = departments.department_name`, function(err, data){
-        console.log(data);
+    var Department = function (department_name, product_name, sales){
+        this.department_name = department_name,
+        this.item = product_name,
+        this.sales = this.item + ": " + sales
+    }
+    
+    connection.query(`SELECT 
+            departments.department_id,
+            store.department_name,
+            store.product_sales,
+            departments.over_head_costs
+        FROM store
+        JOIN departments
+            ON store.department_name = departments.department_name
+        ORDER BY 
+            departments.department_id`, function(err, data){
+            for (var i = 0; i < data.length; i++){
+                
+            }
+
+        // for (var i = 0; i < storeDepartments.length; i++){
+        //     console.log(storeDepartments[i]);
+        // }
     })
 }
 

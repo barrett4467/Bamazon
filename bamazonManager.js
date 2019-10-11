@@ -30,32 +30,29 @@ function lowInventory(){
     connection.query("SELECT * FROM store", function(err, data){
         if (err) throw err;
 
+        var allStocked = false;
+        
         function checkInventory(){
-            for (var i = 0; i < data.length; i++){
-                var item_id = data[i].item_id;
-                var product_name = data[i].product_name;
-                var department_name = data[i].department_name;
-                var price = data[i].price;
-                var stock_quantity = data[i].stock_quantity;
+            if (stock_quantity < 5){
+                console.table(data[i]);
+                itemsArr.push(data[i]);
                 
-                if (stock_quantity < 5){
-                    var itemsArr = [];
-                    var item = new Product (item_id, product_name, department_name, price, stock_quantity);
-                    itemsArr += item;
-                    console.table(item);
-                    setTimeout(runApp, 3000);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        var low = checkInventory();
+            } else {
+                allStocked = true;
+            } 
 
-        if (low === false){
-            console.log("Every product has more than 5 items");
-            setTimeout(runApp, 3000);
-        } 
+        }
+        
+        for (var i = 0; i < data.length; i++){
+            var stock_quantity = data[i].stock_quantity;
+            var itemsArr = [];
+            checkInventory();
+        }
+        if (allStocked === true){
+            console.log("Everything is stocked boss!");
+        }
+        setTimeout(runApp, 3000);
+
     })
 }
 function addInventory(){
