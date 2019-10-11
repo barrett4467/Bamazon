@@ -31,7 +31,7 @@ function lowInventory(){
         if (err) throw err;
 
         var allStocked = false;
-        
+
         function checkInventory(){
             if (stock_quantity < 5){
                 console.table(data[i]);
@@ -48,9 +48,9 @@ function lowInventory(){
             var itemsArr = [];
             checkInventory();
         }
-        if (allStocked === true){
-            console.log("Everything is stocked boss!");
-        }
+        // if (allStocked === true){
+        //     console.log("Everything is stocked boss!");
+        // }
         setTimeout(runApp, 3000);
 
     })
