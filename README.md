@@ -6,6 +6,6 @@ The customer level starts by displaying all avaliable items to purchase in a tab
 
 The manager level uses the same database and table as the customer level. The application starts by asking the manager if they'd like to view the available products, view products with a low inventory, add to inventory, or add an entirely new product. If the manager selects view products, the application displays the items available in a table much like it did at the start of the customer level. If view low inventory is selected, the application will only display items with stock lower than 5 products. The add to inventory option works much the same as the purchasing in the customer level, but reversed. The last option, add new product, creates an entirely new product by asking the manager to input the name, department, price, and stock count. The application takes this input and updates the database before printing the updated product list to the console. All of the above options ask the manager if there's another task they'd like to do.
 
-You can find a walk-through of the customer level here: ![](Customer.webm) 
+You can find a walk-through of the customer level here: ![](customer.gif) 
 
-And the manager walk-through here: ![](Manager.webm)
+And the manager walk-through here: ![](manager.gif)
